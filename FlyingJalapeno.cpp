@@ -6,6 +6,7 @@
 
 #include "Arduino.h"
 #include "FlyingJalapeno.h"
+#include "Wire.h"
 
 //Given a pin, use that pin to blink error messages
 FlyingJalapeno::FlyingJalapeno(int statLED)
@@ -313,4 +314,38 @@ boolean FlyingJalapeno::verify_voltage(int pin, int correct_val, float allowance
   boolean result = verifyVoltage(pin, scaledVoltage, scaledPercent, debug);
   
   return(result);
+}
+
+boolean FlyingJalapeno::verify_i2c_device(byte address)
+{
+  byte error;
+  
+  Serial.println("");
+  Serial.print("Pinging address 0x");
+  if (address<16) Serial.print("0");
+  Serial.print(address,HEX);
+
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+
+    if (error == 0)
+    {
+      Serial.println("...found.");
+      return true;
+    }
+    else if (error==4) 
+    {
+      Serial.print("Unknow error at address 0x");
+      if (address<16) Serial.print("0");
+      Serial.println(address,HEX);
+      return false;
+    }    
+    else
+    {
+      Serial.print("...address 0x");
+      if (address<16) Serial.print("0");
+      Serial.print(address,HEX);
+      Serial.println(" NOT FOUND!\n");
+      return false;
+    }
 }
