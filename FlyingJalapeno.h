@@ -36,7 +36,7 @@
 class FlyingJalapeno
 {
   public:
-    FlyingJalapeno(int statLED);
+    FlyingJalapeno(int statLED, float FJ_VCC = 5.0);
 
 	//Returns true if pin voltage is within a given window of the value we are looking for
 	boolean verifyVoltage(int pin, float expectedVoltage, int allowedPercent = 10, boolean debug = false); 
@@ -75,6 +75,7 @@ class FlyingJalapeno
 	
   private:
     int _statLED;
+	float _FJ_VCC;
 };
 
 #endif

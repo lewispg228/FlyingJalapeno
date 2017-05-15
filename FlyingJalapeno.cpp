@@ -9,9 +9,10 @@
 #include "Wire.h"
 
 //Given a pin, use that pin to blink error messages
-FlyingJalapeno::FlyingJalapeno(int statLED)
+FlyingJalapeno::FlyingJalapeno(int statLED, float FJ_VCC = 5.0)
 {
   _statLED = statLED;
+  _FJ_VCC = FJ_VCC;
 
   pinMode(_statLED, OUTPUT);
 
@@ -139,7 +140,7 @@ boolean FlyingJalapeno::verifyVoltage(int pin, float expectedVoltage, int allowe
   int reading = analogRead(pin);
 
   //Convert reading to voltage
-  float readVoltage = 5.0 / 1024 * reading;
+  float readVoltage = _FJ_VCC / 1024 * reading;
 
   if (debug)
   {
