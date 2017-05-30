@@ -302,7 +302,7 @@ void FlyingJalapeno::setV2(boolean power_on, float voltage)
 //Power test. Replaced by powerTest
 boolean FlyingJalapeno::PT(byte select) // select is for either "1" or "2" for using either pretest resistors on the FJ
 {
-  powerTest(select);
+  return powerTest(select);
 }
 
 //Maintained for reverse compatibility. Use verifyVoltage instead
