@@ -9,7 +9,7 @@
 #include "Wire.h"
 
 //Given a pin, use that pin to blink error messages
-FlyingJalapeno::FlyingJalapeno(int statLED, float FJ_VCC = 5.0)
+FlyingJalapeno::FlyingJalapeno(int statLED = 13, float FJ_VCC = 5.0)
 {
   _statLED = statLED;
   _FJ_VCC = FJ_VCC;
@@ -59,7 +59,7 @@ boolean FlyingJalapeno::testRegulator2()
 }
 
 // GENERIC PRE-TEST for shorts to GND on power rails, returns true if all is good, returns false if there is short detected
-boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin) // select is for either "1" or "2" for using either pretest resistors on the FJ
+boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin)
 {
 	pinMode(control_pin, OUTPUT);
 	pinMode(read_pin, INPUT);
@@ -317,36 +317,45 @@ boolean FlyingJalapeno::verify_voltage(int pin, int correct_val, float allowance
   return(result);
 }
 
-boolean FlyingJalapeno::verify_i2c_device(byte address)
+boolean FlyingJalapeno::verify_i2c_device(byte address, boolean debug)
 {
   byte error;
   
+  if(debug) 
+  {
   Serial.println("");
   Serial.print("Pinging address 0x");
   if (address<16) Serial.print("0");
   Serial.print(address,HEX);
+  }
 
     Wire.beginTransmission(address);
     error = Wire.endTransmission();
 
     if (error == 0)
     {
-      Serial.println("...found.");
+      if(debug) Serial.println("...found.");
       return true;
     }
     else if (error==4) 
     {
-      Serial.print("Unknow error at address 0x");
-      if (address<16) Serial.print("0");
-      Serial.println(address,HEX);
+      if(debug) 
+	  {
+		  Serial.print("Unknow error at address 0x");
+		  if (address<16) Serial.print("0");
+		  Serial.println(address,HEX);
+	  }
       return false;
     }    
     else
     {
-      Serial.print("...address 0x");
-      if (address<16) Serial.print("0");
-      Serial.print(address,HEX);
-      Serial.println(" NOT FOUND!\n");
+	  if(debug) 
+	  {
+		  Serial.print("...address 0x");
+		  if (address<16) Serial.print("0");
+		  Serial.print(address,HEX);
+		  Serial.println(" NOT FOUND!\n");
+	  }
       return false;
     }
 }

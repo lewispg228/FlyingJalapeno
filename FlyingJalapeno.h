@@ -64,7 +64,7 @@ class FlyingJalapeno
     void dot();
     void dash();
 	
-	boolean verify_i2c_device(byte address);
+	boolean verify_i2c_device(byte address, boolean debug);
 	
 	//Depricated, don't use. These are here to allow old code to compile
 	boolean verify_voltage(int input_value, int correct_val, float allowance_percent, boolean debug);
