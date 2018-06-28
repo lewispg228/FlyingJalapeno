@@ -26,4 +26,4 @@ PCA_enable	KEYWORD2
 PreTest_Custom	KEYWORD2
 
 verify_voltage	KEYWORD2
-verify_i2C_device	KEYWORD2
+verify_i2c_device	KEYWORD2
