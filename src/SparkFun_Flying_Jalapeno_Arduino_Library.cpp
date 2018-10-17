@@ -20,7 +20,7 @@ FlyingJalapeno::FlyingJalapeno(int statLED = 13, float FJ_VCC = 5.0)
   pinMode(LED_PRETEST_FAIL, OUTPUT);
   pinMode(LED_PASS, OUTPUT);
   pinMode(LED_FAIL, OUTPUT);
-  
+
   digitalWrite(LED_PRETEST_PASS, LOW);
   digitalWrite(LED_PRETEST_FAIL LOW);
   digitalWrite(LED_PASS, LOW);
@@ -53,23 +53,23 @@ void FlyingJalapeno::dash()
 // GENERIC PRE-TEST for shorts to GND on power rails, returns true if all is good, returns false if there is short detected
 boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin)
 {
-	pinMode(control_pin, OUTPUT);
-	pinMode(read_pin, INPUT);
-	
-	digitalWrite(control_pin, HIGH);
-	delay(200);
-	int reading = analogRead(read_pin);
-	
-	Serial.print("Jumper test reading:");
-	Serial.println(reading);
-	
-	digitalWrite(control_pin, LOW);
-	pinMode(control_pin, INPUT);
-	
-	int jumper_val = 486;
-	
-	if((reading < (jumper_val*1.03)) && (reading > (jumper_val*0.97))) return false; // jumper detected!!
-	else return true;
+  pinMode(control_pin, OUTPUT);
+  pinMode(read_pin, INPUT);
+
+  digitalWrite(control_pin, HIGH);
+  delay(200);
+  int reading = analogRead(read_pin);
+
+  Serial.print("Jumper test reading:");
+  Serial.println(reading);
+
+  digitalWrite(control_pin, LOW);
+  pinMode(control_pin, INPUT);
+
+  int jumper_val = 486;
+
+  if ((reading < (jumper_val * 1.03)) && (reading > (jumper_val * 0.97))) return false; // jumper detected!!
+  else return true;
 }
 
 
@@ -77,25 +77,25 @@ boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin)
 //Test power circuit 1 to see if there is a short on the target
 //Returns true if all is ok
 //Returns false if there is a short
-boolean FlyingJalapeno::testRegulator1() 
+boolean FlyingJalapeno::testRegulator1()
 {
-  return(powerTest(1));
+  return (powerTest(1));
 }
 
-boolean FlyingJalapeno::testRegulator2() 
+boolean FlyingJalapeno::testRegulator2()
 {
-  return(powerTest(2));
+  return (powerTest(2));
 }
 
 //Returns true if there is a short
-boolean FlyingJalapeno::isRegulator1Shorted() 
+boolean FlyingJalapeno::isRegulator1Shorted()
 {
-  return(!powerTest(1));
+  return (!powerTest(1));
 }
 
-boolean FlyingJalapeno::isRegulator2Shorted() 
+boolean FlyingJalapeno::isRegulator2Shorted()
 {
-  return(!powerTest(2));
+  return (!powerTest(2));
 }
 
 //Test target board for shorts to GND
@@ -105,7 +105,7 @@ boolean FlyingJalapeno::powerTest(byte select) // select is for either "1" or "2
   //Power down regulators
   disableRegulator1();
   disableRegulator2();
-  
+
   //Setup control pin
   pinMode(POWER_TEST_CONTROL, OUTPUT);
   digitalWrite(POWER_TEST_CONTROL, HIGH);
@@ -115,8 +115,8 @@ boolean FlyingJalapeno::powerTest(byte select) // select is for either "1" or "2
   else if (select == 2) read_pin = A15;
   else
   {
-	Serial.println("Error: powerTest requires pin select.");
-	return(false);
+    Serial.println("Error: powerTest requires pin select.");
+    return (false);
   }
 
   pinMode(read_pin, INPUT);
@@ -134,10 +134,10 @@ boolean FlyingJalapeno::powerTest(byte select) // select is for either "1" or "2
 
   int jumper_val = 486;
 
-  if ((reading < (jumper_val * 1.03)) && (reading > (jumper_val * 0.97))) 
-	return false; // jumper detected!!
-  else 
-	return true;
+  if ((reading < (jumper_val * 1.03)) && (reading > (jumper_val * 0.97)))
+    return false; // jumper detected!!
+  else
+    return true;
 }
 
 //Test a pin to see what voltage is on the pin.
@@ -150,7 +150,7 @@ boolean FlyingJalapeno::verifyVoltage(int pin, float expectedVoltage, int allowe
 {
   //float allowanceFraction = map(allowedPercent, 0, 100, 0, 1.0); //Scale int to a fraction of 1.0
   //Grrrr! map doesn't work with floats at all
-  
+
   float allowanceFraction = allowedPercent / 100.0; //Scale the allowedPercent to a float
 
   int reading = analogRead(pin);
@@ -169,12 +169,12 @@ boolean FlyingJalapeno::verifyVoltage(int pin, float expectedVoltage, int allowe
     Serial.print("Voltage: ");
     Serial.println(readVoltage);
   }
-  
-  
-  if ((readVoltage <= (expectedVoltage * (1.0 + allowanceFraction))) && (readVoltage >= (expectedVoltage * (1.0 - allowanceFraction)))) 
-	return true; // good value
-  else 
-	return false;
+
+
+  if ((readVoltage <= (expectedVoltage * (1.0 + allowanceFraction))) && (readVoltage >= (expectedVoltage * (1.0 - allowanceFraction))))
+    return true; // good value
+  else
+    return false;
 }
 
 boolean FlyingJalapeno::verify_value(int input_value, int correct_val, float allowance_percent)
@@ -186,23 +186,23 @@ boolean FlyingJalapeno::verify_value(int input_value, int correct_val, float all
 //Enable or disable regulator #1
 void FlyingJalapeno::enableRegulator1(void)
 {
-    digitalWrite(PSU1_POWER_CONTROL, HIGH); // turn on the high side switch
+  digitalWrite(PSU1_POWER_CONTROL, HIGH); // turn on the high side switch
 }
 
 void FlyingJalapeno::disableRegulator1(void)
 {
-    digitalWrite(PSU1_POWER_CONTROL, LOW); // turn off the high side switch
+  digitalWrite(PSU1_POWER_CONTROL, LOW); // turn off the high side switch
 }
 
 //Enable or disable regulator #2
 void FlyingJalapeno::enableRegulator2(void)
 {
-    digitalWrite(PSU2_POWER_CONTROL, HIGH); // turn on the high side switch
+  digitalWrite(PSU2_POWER_CONTROL, HIGH); // turn on the high side switch
 }
 
 void FlyingJalapeno::disableRegulator2(void)
 {
-    digitalWrite(PSU2_POWER_CONTROL, LOW); // turn off the high side switch
+  digitalWrite(PSU2_POWER_CONTROL, LOW); // turn off the high side switch
 }
 
 //Setup the first power supply to the chosen voltage level
@@ -286,92 +286,92 @@ void FlyingJalapeno::disablePCA(void)
 {
   // PCA is enabled via PD4, which is not a standard arduino pin, so we will have to write this via register calls... hmmff!
   PORTD = PORTD & ~(B00010000); // PD4 LOW - Disables the PCA
-  
+
   delay(100);
 }
 
 //Depricated functions
-//These are here to make old code still work. Use the newer functions
+//These are here to make old code still work. Use the newer functions: enablePCA(), disablePCA()
 void FlyingJalapeno::PCA_enable(boolean enable)
 {
-  if(enable) enablePCA();
+  if (enable) enablePCA();
   else disablePCA();
 }
 
 //Replaced by setRegulatorVoltage1() and enableRegulator1()
 void FlyingJalapeno::setV1(boolean power_on, float voltage)
 {
-  if(power_on) enableRegulator1();
+  if (power_on) enableRegulator1();
   else disableRegulator1();
-  
+
   setRegulatorVoltage1(voltage);
 }
 
 void FlyingJalapeno::setV2(boolean power_on, float voltage)
 {
-  if(power_on) enableRegulator2();
+  if (power_on) enableRegulator2();
   else disableRegulator2();
-  
+
   setRegulatorVoltage2(voltage);
 }
 
-//Power test. Replaced by powerTest
+//Power test. Replaced by powerTest()
 boolean FlyingJalapeno::PT(byte select) // select is for either "1" or "2" for using either pretest resistors on the FJ
 {
   return powerTest(select);
 }
 
-//Maintained for reverse compatibility. Use verifyVoltage instead
+//Maintained for reverse compatibility. Use verifyVoltage() instead
 boolean FlyingJalapeno::verify_voltage(int pin, int correct_val, float allowance_percent, boolean debug)
 {
   int scaledPercent = allowance_percent * 100; //verifyVoltage expects an int. Scale 0.1 to 10.
-  
+
   float scaledVoltage = 5.0 / 1024 * correct_val; //Scale voltage to a float.
-  
+
   boolean result = verifyVoltage(pin, scaledVoltage, scaledPercent, debug);
-  
-  return(result);
+
+  return (result);
 }
 
 boolean FlyingJalapeno::verify_i2c_device(byte address, boolean debug)
 {
   byte error;
-  
-  if(debug) 
+
+  if (debug)
   {
-  Serial.println("");
-  Serial.print("Pinging address 0x");
-  if (address<16) Serial.print("0");
-  Serial.print(address,HEX);
+    Serial.println("");
+    Serial.print("Pinging address 0x");
+    if (address < 16) Serial.print("0");
+    Serial.print(address, HEX);
   }
 
-    Wire.beginTransmission(address);
-    error = Wire.endTransmission();
+  Wire.beginTransmission(address);
+  error = Wire.endTransmission();
 
-    if (error == 0)
+  if (error == 0)
+  {
+    if (debug) Serial.println("...found.");
+    return true;
+  }
+  else if (error == 4)
+  {
+    if (debug)
     {
-      if(debug) Serial.println("...found.");
-      return true;
+      Serial.print("Unknow error at address 0x");
+      if (address < 16) Serial.print("0");
+      Serial.println(address, HEX);
     }
-    else if (error==4) 
+    return false;
+  }
+  else
+  {
+    if (debug)
     {
-      if(debug) 
-	  {
-		  Serial.print("Unknow error at address 0x");
-		  if (address<16) Serial.print("0");
-		  Serial.println(address,HEX);
-	  }
-      return false;
-    }    
-    else
-    {
-	  if(debug) 
-	  {
-		  Serial.print("...address 0x");
-		  if (address<16) Serial.print("0");
-		  Serial.print(address,HEX);
-		  Serial.println(" NOT FOUND!\n");
-	  }
-      return false;
+      Serial.print("...address 0x");
+      if (address < 16) Serial.print("0");
+      Serial.print(address, HEX);
+      Serial.println(" NOT FOUND!\n");
     }
+    return false;
+  }
 }
