@@ -5,7 +5,7 @@
 */
 
 #include "Arduino.h"
-#include "FlyingJalapeno.h"
+#include "SparkFun_Flying_Jalapeno_Arduino_Library.h"
 #include "Wire.h"
 
 //Given a pin, use that pin to blink error messages
