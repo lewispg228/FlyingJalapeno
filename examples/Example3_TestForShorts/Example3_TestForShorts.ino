@@ -18,18 +18,13 @@
 
 #define STATUS_LED 13
 
-#include <FlyingJalapeno.h>
-FlyingJalapeno FJ(STATUS_LED); //Blink status msgs on pin 13
+#include "SparkFun_Flying_Jalapeno_Arduino_Library.h" //Click here to get the library: http://librarymanager/All#SparkFun_Jalapeno
+FlyingJalapeno FJ(STATUS_LED, 3.3); //Blink status msgs on pin 13. Board has VCC jumper set to 3.3V.
 
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Testbed\n\r");
-
-  digitalWrite(LED_PRETEST_PASS, LOW);
-  digitalWrite(LED_PRETEST_FAIL, LOW);
-  digitalWrite(LED_PASS, LOW);
-  digitalWrite(LED_FAIL, LOW);
+  Serial.println("Test for shorts");
 
   FJ.setRegulatorVoltage1(5.0); //Set regulator1 to 5V
   FJ.setRegulatorVoltage2(3.3); //Set regulator2 to 3.3V
@@ -37,12 +32,16 @@ void setup()
   if(FJ.testRegulator1() == false)
   {
     Serial.println("Whoa! Short on power rail 1");
+    while(1);
   }
 
   if(FJ.testRegulator2() == false)
   {
     Serial.println("Whoa! Short on power rail 2");
+    while(1);
   }
+
+  Serial.println("No shorts detected!");
 
   //Now power up the target
   //FJ.enableRegulator1();

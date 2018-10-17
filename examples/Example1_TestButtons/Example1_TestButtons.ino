@@ -9,15 +9,10 @@
 
 #define STATUS_LED 13
 
-#include <FlyingJalapeno.h>
-FlyingJalapeno FJ(STATUS_LED); //Blink status msgs on pin 13
+#include "SparkFun_Flying_Jalapeno_Arduino_Library.h" //Click here to get the library: http://librarymanager/All#SparkFun_Jalapeno
+//The FJ library depends on the CapSense library that can be obtained here: http://librarymanager/All#CapacitiveSensor_Arduino
 
-#include <CapacitiveSensor.h>
-CapacitiveSensor button1 = CapacitiveSensor(47, 45); //Wired to pins 47/45 on nearly every jig
-CapacitiveSensor button2 = CapacitiveSensor(31, 46); //Wired to pins 31/46 on nearly every jig
-
-long preTestButton = 0; //Cap sense values for two main test buttons
-long testButton = 0;
+FlyingJalapeno FJ(STATUS_LED, 3.3); //Blink status msgs on pin 13. Board has VCC jumper set to 3.3V.
 
 void setup()
 {
@@ -27,27 +22,24 @@ void setup()
 
 void loop()
 {
-  preTestButton = button1.capacitiveSensor(30);
-  testButton = button2.capacitiveSensor(30);
-
   //Is user pressing PreTest button?
-  if (preTestButton > 5000)
+  if (FJ.isPretestPressed() == true)
   {
     Serial.println("You pressed pretest!");
     
     digitalWrite(LED_PT_PASS, HIGH);
     digitalWrite(LED_PT_FAIL, LOW);
 
-    delay(500); // debounce touching
+    delay(50); //Debounce
   }
-  else if (testButton > 5000)
+  else if (FJ.isTestPressed() == true)
   {
     Serial.println("You pressed test!");
     
     digitalWrite(LED_PASS, HIGH);
     digitalWrite(LED_FAIL, LOW);
 
-    delay(500); // debounce touching
+    delay(50); //Debounce
   }
 }
 

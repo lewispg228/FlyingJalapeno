@@ -8,12 +8,9 @@
 */
 #define STATUS_LED 13
 
-#include <FlyingJalapeno.h>
-FlyingJalapeno FJ(STATUS_LED); //Blink status msgs on pin 13
+#include "SparkFun_Flying_Jalapeno_Arduino_Library.h"
+FlyingJalapeno FJ(STATUS_LED, 3.3); //Blink status msgs on pin 13. The FJ is setup for 3.3V I/O.
 
-#include <CapacitiveSensor.h>
-CapacitiveSensor cs_1 = CapacitiveSensor(47, 45);
-CapacitiveSensor cs_2 = CapacitiveSensor(31, 46);
 
 int failures = 0; //Number of failures by the main test routine
 
@@ -29,20 +26,12 @@ void setup()
   FJ.enablePCA(); //Enable the I2C buffer
 
   Serial.begin(9600);
-  Serial.println("Testbed\n\r");
+  Serial.println("Full test example. Press the Pretest button to begin.");
 }
 
 void loop()
 {
-  preTestButton = cs_1.capacitiveSensor(30);
-  testButton = cs_2.capacitiveSensor(30);
-
-  //Serial.print(preTestButton);
-  //Serial.print("\t");
-  //Serial.println(testButton);
-
-  //Is user pressing PreTest button?
-  if (preTestButton > 5000)
+  if (FJ.isPretestPressed() == true)
   {
     FJ.dot(); //Blink status LED to indicate button press
 
@@ -53,12 +42,10 @@ void loop()
     else
     {
       //Check both power supplies for shorts to ground
-      if (FJ.powerTest(1) == true && FJ.powerTest(2) == true)
+      if (FJ.isRegulator1Shorted() == false && FJ.isRegulator2Shorted() == false)
       {
-        //FJ.setV2(true, 4.2); // charge led off
-        //delay(2000);
-
-        FJ.setV1(true, 5); //Turn on power supply 1 to 5.0V
+        FJ.setRegulatorVoltage1(5.0); //Turn on power supply 5.0V
+        FJ.enableRegulator1();
         
         delay(500);
 
@@ -69,14 +56,14 @@ void loop()
         digitalWrite(LED_PT_PASS, HIGH);
         digitalWrite(LED_PT_FAIL, LOW);
 
-        delay(500); // debounce touching
+        delay(50); //Debounce
       }
       else
       {
         //Power supply test failed
         failures++;
 
-        FJ.setV1(false, 5); //Turn off power supply 1
+        FJ.disableRegulator1(); //Turn off power supply 1
         
         Serial.println("Jumper on Power Rail V1\n\r");
         
@@ -89,39 +76,42 @@ void loop()
       }
     }
   }
-  else if (testButton > 5000 && targetPowered == true)
+  else if (FJ.isTestPressed() == true && targetPowered == true)
   {
-    //Begin main test
+    Serial.println("Running test");
     
-    FJ.dot();
-
-    failures = 0; // reset for testing a second time
+    //Begin main test
+    FJ.statOn();
 
     digitalWrite(LED_PASS, LOW);
     digitalWrite(LED_FAIL, LOW);
 
     //test_33V();
-    test(); //Run main test code
-
-    if (failures == 0)
+    if(test() == true) //Run main test code
     {
+      Serial.println("Test complete");
       digitalWrite(LED_PASS, HIGH);
-      charge_led_blink();
     }
     else
     {
       digitalWrite(LED_FAIL, HIGH);
     }
+
+    FJ.disableRegulator1(); //Turn off power supply 1
+    Serial.println("Regulator 1 disabled");
+    targetPowered = false;
+
+    FJ.statOff();
   }
 }
 
-void test()
+boolean test()
 {
   // add in your test code here
+  return(true); //If we passed
 }
 
-// This is an example of testing a 3.3V output from the board sent to A2.
-// This was originally used on the ESP32 dev board testbed.
+//This is an example of testing a 3.3V output from the board sent to A2.
 void test_33V()
 {
   Serial.println("testing 3.3V output on board");
@@ -141,12 +131,13 @@ void test_33V()
   }
 }
 
+//Turn off all regulators
 void power_down()
 {
-  Serial.println("powering down target");
+  Serial.println("Powering down target");
 
-  FJ.setV1(false, 5); //Turn off power supply 1, but leave voltage selection at 5V
-  FJ.setV2(false, 4.2); //Turn off power supply 1, but leave voltage selection at 4.2V
+  FJ.disableRegulator1(); //Turn off power supply 1, but leave voltage selection at 5V
+  FJ.disableRegulator2(); //Turn off power supply 1, but leave voltage selection at 4.2V
 
   targetPowered = false;
 
@@ -157,17 +148,19 @@ void power_down()
   digitalWrite(LED_FAIL, LOW);
 
   failures = 0;
-
-  delay(500); // debounce touching
 }
 
+//Demonstrates how to modify the regulator voltage to mimic a battery getting up to
+//a fully charged voltage level (4.2V). The charge LED should turn off.
 void charge_led_blink()
 {
+  FJ.enableRegulator2();
   for (int i = 0 ; i < 3 ; i++)
   {
-    FJ.setV2(true, 3.7); // charge led ON
+    FJ.setRegulatorVoltage2(3.7); // charge led ON
     delay(500);
-    FJ.setV2(true, 4.2); // charge led off
+    FJ.setRegulatorVoltage2(4.2); // charge led off
     delay(500);
   }
+  FJ.disableRegulator2(); //For good measure, turn off this regulator
 }

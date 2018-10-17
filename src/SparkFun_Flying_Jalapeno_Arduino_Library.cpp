@@ -4,12 +4,14 @@
   Released into the public domain.
 */
 
-#include "Arduino.h"
 #include "SparkFun_Flying_Jalapeno_Arduino_Library.h"
-#include "Wire.h"
+
+#include <CapacitiveSensor.h> //Click here to get the library: http://librarymanager/All#CapacitiveSensor_Arduino
+CapacitiveSensor button1 = CapacitiveSensor(47, 45); //Wired to pins 47/45 on nearly every jig
+CapacitiveSensor button2 = CapacitiveSensor(31, 46); //Wired to pins 31/46 on nearly every jig
 
 //Given a pin, use that pin to blink error messages
-FlyingJalapeno::FlyingJalapeno(int statLED = 13, float FJ_VCC = 5.0)
+FlyingJalapeno::FlyingJalapeno(int statLED, float FJ_VCC)
 {
   _statLED = statLED;
   _FJ_VCC = FJ_VCC;
@@ -22,7 +24,7 @@ FlyingJalapeno::FlyingJalapeno(int statLED = 13, float FJ_VCC = 5.0)
   pinMode(LED_FAIL, OUTPUT);
 
   digitalWrite(LED_PRETEST_PASS, LOW);
-  digitalWrite(LED_PRETEST_FAIL LOW);
+  digitalWrite(LED_PRETEST_FAIL, LOW);
   digitalWrite(LED_PASS, LOW);
   digitalWrite(LED_FAIL, LOW);
 
@@ -32,6 +34,36 @@ FlyingJalapeno::FlyingJalapeno(int statLED = 13, float FJ_VCC = 5.0)
   pinMode(PSU2_POWER_CONTROL, OUTPUT);
   disableRegulator2();
 }
+
+//Returns true if value is over threshold
+//Threshold is optional. 5000 is default
+boolean FlyingJalapeno::isPretestPressed(long threshold)
+{
+  long preTestButton = button1.capacitiveSensor(30);
+  if(preTestButton > threshold) return(true);
+  return(false);	
+}
+
+//Returns true if value is over threshold
+//Threshold is optional. 5000 is default
+boolean FlyingJalapeno::isTestPressed(long threshold)
+{
+  long testButton = button2.capacitiveSensor(30);
+  if(testButton > threshold) return(true);
+  return(false);
+}
+
+//Turn stat LED on
+void FlyingJalapeno::statOn()
+{
+  digitalWrite(_statLED, HIGH);
+}	
+
+//Turn stat LED on
+void FlyingJalapeno::statOff()
+{
+  digitalWrite(_statLED, LOW);
+}	
 
 //Brief blink of status LED to indicate... something.
 void FlyingJalapeno::dot()

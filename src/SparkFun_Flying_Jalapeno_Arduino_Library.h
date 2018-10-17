@@ -1,8 +1,14 @@
 
-#ifndef FlyingJalapeno_h
-#define FlyingJalapeno_h
+#ifndef _SPAPKFUN_FLYING_JALAPENO_ARDUINO_LIBRARY_H_
+#define _SPAPKFUN_FLYING_JALAPENO_ARDUINO_LIBRARY_H_
 
+#if (ARDUINO >= 100)
 #include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
+
+#include <Wire.h>
 
 //These are the four LEDs on the test jig
 //Setting these pins high turn on a given LED
@@ -12,7 +18,6 @@
 #define LED_PRETEST_FAIL 42 
 #define LED_PASS 41
 #define LED_FAIL 40
-
 
 // These lines are connected to different resistors off the adj line
 // Pulling pins low enables the resistors
@@ -36,7 +41,13 @@
 class FlyingJalapeno
 {
   public:
-    FlyingJalapeno(int statLED, float FJ_VCC = 5.0);
+    FlyingJalapeno(int statLED, float FJ_VCC);
+	
+	boolean isPretestPressed(long threshold = 5000); //Returns true if cap sense button is being pressed
+	boolean isTestPressed(long threshold = 5000);
+	
+	void statOn(); //Turn the stat LED on
+	void statOff();
 
 	//Returns true if pin voltage is within a given window of the value we are looking for
 	boolean verifyVoltage(int pin, float expectedVoltage, int allowedPercent = 10, boolean debug = false); 
@@ -44,7 +55,7 @@ class FlyingJalapeno
 	boolean verify_value(int input_value, int correct_val, float allowance_percent);
 
 	boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin);
-
+	
 	boolean isRegulator1Shorted(); //Test regulator 1 for shorts. True if short detected.
 	boolean isRegulator2Shorted(); //Test regulator 2 for shorts. True if short detected.
 	boolean testRegulator1(); //Old
