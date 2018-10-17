@@ -16,10 +16,15 @@ FlyingJalapeno::FlyingJalapeno(int statLED = 13, float FJ_VCC = 5.0)
 
   pinMode(_statLED, OUTPUT);
 
-  pinMode(LED_PT_PASS, OUTPUT);
-  pinMode(LED_PT_FAIL, OUTPUT);
+  pinMode(LED_PRETEST_PASS, OUTPUT);
+  pinMode(LED_PRETEST_FAIL, OUTPUT);
   pinMode(LED_PASS, OUTPUT);
   pinMode(LED_FAIL, OUTPUT);
+  
+  digitalWrite(LED_PRETEST_PASS, LOW);
+  digitalWrite(LED_PRETEST_FAIL LOW);
+  digitalWrite(LED_PASS, LOW);
+  digitalWrite(LED_FAIL, LOW);
 
   pinMode(PSU1_POWER_CONTROL, OUTPUT);
   disableRegulator1();
@@ -28,6 +33,7 @@ FlyingJalapeno::FlyingJalapeno(int statLED = 13, float FJ_VCC = 5.0)
   disableRegulator2();
 }
 
+//Brief blink of status LED to indicate... something.
 void FlyingJalapeno::dot()
 {
   digitalWrite(_statLED, HIGH);
@@ -42,20 +48,6 @@ void FlyingJalapeno::dash()
   delay(1000);
   digitalWrite(_statLED, LOW);
   delay(250);
-}
-
-
-//Test power circuit 1 to see if there is a short on the target
-//Returns true if all is ok
-//Returns false if there is a short
-boolean FlyingJalapeno::testRegulator1() 
-{
-  return(powerTest(1));
-}
-
-boolean FlyingJalapeno::testRegulator2() 
-{
-  return(powerTest(2));
 }
 
 // GENERIC PRE-TEST for shorts to GND on power rails, returns true if all is good, returns false if there is short detected
@@ -81,6 +73,30 @@ boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin)
 }
 
 
+
+//Test power circuit 1 to see if there is a short on the target
+//Returns true if all is ok
+//Returns false if there is a short
+boolean FlyingJalapeno::testRegulator1() 
+{
+  return(powerTest(1));
+}
+
+boolean FlyingJalapeno::testRegulator2() 
+{
+  return(powerTest(2));
+}
+
+//Returns true if there is a short
+boolean FlyingJalapeno::isRegulator1Shorted() 
+{
+  return(!powerTest(1));
+}
+
+boolean FlyingJalapeno::isRegulator2Shorted() 
+{
+  return(!powerTest(2));
+}
 
 //Test target board for shorts to GND
 //Returns true if all is good, returns false if there is short detected

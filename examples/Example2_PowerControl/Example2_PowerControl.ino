@@ -25,7 +25,7 @@ long testButton = 0;
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Testbed\n\r");
+  Serial.println("Power Control Example");
 
   digitalWrite(LED_PRETEST_PASS, LOW);
   digitalWrite(LED_PRETEST_FAIL, LOW);

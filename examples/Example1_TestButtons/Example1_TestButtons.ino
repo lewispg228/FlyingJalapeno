@@ -22,12 +22,7 @@ long testButton = 0;
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Testbed\n\r");
-
-  digitalWrite(LED_PRETEST_PASS, LOW);
-  digitalWrite(LED_PRETEST_FAIL, LOW);
-  digitalWrite(LED_PASS, LOW);
-  digitalWrite(LED_FAIL, LOW);
+  Serial.println("Reading the Test buttons example");
 }
 
 void loop()
@@ -38,7 +33,7 @@ void loop()
   //Is user pressing PreTest button?
   if (preTestButton > 5000)
   {
-    Serial.println("You press pretest!");
+    Serial.println("You pressed pretest!");
     
     digitalWrite(LED_PT_PASS, HIGH);
     digitalWrite(LED_PT_FAIL, LOW);
@@ -47,7 +42,7 @@ void loop()
   }
   else if (testButton > 5000)
   {
-    Serial.println("You press test!");
+    Serial.println("You pressed test!");
     
     digitalWrite(LED_PASS, HIGH);
     digitalWrite(LED_FAIL, LOW);

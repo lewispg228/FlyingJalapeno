@@ -18,7 +18,7 @@ FlyingJalapeno FJ(STATUS_LED); //Blink status msgs on pin 13
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Testbed\n\r");
+  Serial.println("Test pin for voltage example");
 
   digitalWrite(LED_PRETEST_PASS, LOW);
   digitalWrite(LED_PRETEST_FAIL, LOW);
@@ -70,4 +70,4 @@ void loop()
 
   delay(1000);  
 }
-
+  

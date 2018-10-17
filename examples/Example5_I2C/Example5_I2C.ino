@@ -16,7 +16,7 @@ FlyingJalapeno FJ(STATUS_LED); //Blink status msgs on pin 13
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Testbed\n\r");
+  Serial.println("I2C Enable Example");
 
   digitalWrite(LED_PRETEST_PASS, LOW);
   digitalWrite(LED_PRETEST_FAIL, LOW);
@@ -25,7 +25,7 @@ void setup()
 
   FJ.enablePCA(); //Enable the I2C buffer
 
-  FJ.setRegulatorVoltage1(5.3); //Set regulator1 to 3.3V
+  FJ.setRegulatorVoltage1(3.3); //Set regulator1 to 3.3V
 
   if(FJ.testRegulator1() == false)
   {

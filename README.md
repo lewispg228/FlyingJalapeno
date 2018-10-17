@@ -1,2 +1,3 @@
-# flying_jalapeno_arduino_library
-An arduino library that mates nicely with the flying jalapeno hardware (a generic testbed "brain" for SparkFun productino test jigs.
+# Flying Jalapeno Library for Arduino
+
+The Flying Jalapeno is the name of the generic platform used to test various products at SparkFun. This is the Arduino library that wraps a handful of functions to make the FJ easier to use.

@@ -8,7 +8,7 @@
 //Setting these pins high turn on a given LED
 #define LED_PT_PASS 43 //PT = Pre-test
 #define LED_PT_FAIL 42 
-#define LED_PRETEST_PASS 43
+#define LED_PRETEST_PASS 43 //Duplicate but more descriptive
 #define LED_PRETEST_FAIL 42 
 #define LED_PASS 41
 #define LED_FAIL 40
@@ -45,8 +45,10 @@ class FlyingJalapeno
 
 	boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin);
 
-	boolean testRegulator1(); //Test regulator 1 for shorts. True if short detected.
-	boolean testRegulator2(); //Test regulator 2 for shorts. True if short detected.
+	boolean isRegulator1Shorted(); //Test regulator 1 for shorts. True if short detected.
+	boolean isRegulator2Shorted(); //Test regulator 2 for shorts. True if short detected.
+	boolean testRegulator1(); //Old
+	boolean testRegulator2(); //Old
 	boolean powerTest(byte select);
 
 	void setRegulatorVoltage1(float voltage); //Set board voltage 1 (5 or 3.3V)
