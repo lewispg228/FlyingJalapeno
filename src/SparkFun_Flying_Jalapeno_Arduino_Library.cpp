@@ -82,7 +82,7 @@ void FlyingJalapeno::dash()
   delay(250);
 }
 
-// GENERIC PRE-TEST for shorts to GND on power rails, returns true if all is good, returns false if there is short detected
+// GENERIC PRE-TEST for shorts to GND on power rails, returns false if all is good, returns true if there is short detected
 boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin)
 {
   pinMode(control_pin, OUTPUT);
@@ -100,8 +100,8 @@ boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin)
 
   int jumper_val = 486;
 
-  if ((reading < (jumper_val * 1.03)) && (reading > (jumper_val * 0.97))) return false; // jumper detected!!
-  else return true;
+  if ((reading < (jumper_val * 1.03)) && (reading > (jumper_val * 0.97))) return true; // jumper detected!!
+  else return false;
 }
 
 
