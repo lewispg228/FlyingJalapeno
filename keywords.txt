@@ -40,7 +40,9 @@ PT	KEYWORD2
 setV1	KEYWORD2
 setV2	KEYWORD2
 PCA_enable	KEYWORD2
-PreTest_Custom	KEYWORD2
+Pretest_Custom	KEYWORD2
+isShortToGround_Custom	KEYWORD2
+
 
 #######################################
 # Constants (LITERAL1)

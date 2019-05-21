@@ -82,7 +82,7 @@ void FlyingJalapeno::dash()
   delay(250);
 }
 
-// GENERIC PRE-TEST for shorts to GND on power rails, returns false if all is good, returns true if there is short detected
+// GENERIC PRE-TEST for shorts to GND on power rails, returns true if all is good, returns false if there is short detected
 boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin)
 {
   pinMode(control_pin, OUTPUT);
@@ -100,7 +100,34 @@ boolean FlyingJalapeno::PreTest_Custom(byte control_pin, byte read_pin)
 
   int jumper_val = 486;
 
-  if ((reading < (jumper_val * 1.03)) && (reading > (jumper_val * 0.97))) return true; // jumper detected!!
+  if ((reading < (jumper_val * 1.03)) && (reading > (jumper_val * 0.97))) return false; // jumper detected!!
+  else return true;
+}
+
+// GENERIC PRE-TEST for shorts to GND on power rails, returns FALSE if all is good, returns TRUE if there is short detected
+boolean FlyingJalapeno::isShortToGround_Custom(byte control_pin, byte read_pin, boolean debug)
+{
+  pinMode(control_pin, OUTPUT);
+  pinMode(read_pin, INPUT);
+
+  digitalWrite(control_pin, HIGH);
+  delay(200);
+  int reading = analogRead(read_pin);
+
+  if(debug) Serial.print("Jumper test reading:");
+  if(debug) Serial.println(reading);
+
+  digitalWrite(control_pin, LOW);
+  pinMode(control_pin, INPUT);
+
+  int jumper_val = 486;
+
+  if ((reading < (jumper_val * 1.03)) && (reading > (jumper_val * 0.97))) 
+	{
+		if (!debug) Serial.print("Jumper test reading:"); // check debug, to avoid double printing
+		if (!debug) Serial.println(reading);
+		return true; // jumper detected!!
+	}
   else return false;
 }
 

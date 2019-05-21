@@ -58,6 +58,7 @@ class FlyingJalapeno
 	
 	boolean isRegulator1Shorted(); //Test regulator 1 for shorts. True if short detected.
 	boolean isRegulator2Shorted(); //Test regulator 2 for shorts. True if short detected.
+	boolean isShortToGround_Custom(byte control_pin, byte read_pin, boolean debug = false); // test for a short to gnd on a custom set of pins
 	boolean testRegulator1(); //Old
 	boolean testRegulator2(); //Old
 	boolean powerTest(byte select);
