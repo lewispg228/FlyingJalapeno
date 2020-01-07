@@ -6,7 +6,7 @@
 
 #include "SparkFun_Flying_Jalapeno_Arduino_Library.h"
 
-#include <CapacitiveSensor.h> //Click here to get the library: http://librarymanager/All#CapacitiveSensor_Arduino
+#include <CapacitiveSensor.h> //https://github.com/PaulStoffregen/CapacitiveSensor
 CapacitiveSensor button1 = CapacitiveSensor(47, 45); //Wired to pins 47/45 on nearly every jig
 CapacitiveSensor button2 = CapacitiveSensor(31, 46); //Wired to pins 31/46 on nearly every jig
 
